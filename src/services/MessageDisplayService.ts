@@ -25,16 +25,25 @@ export class MessageDisplayService {
     };
 
     for (const thread of threads) {
-      const threadMessages = messages.filter((message) => message.threadId === thread.id);
+      const threadMessages = messages.filter(
+        (message) => message.threadId === thread.id
+      );
       console.log(`\nThread: ${formatText(thread.name, 20)}`);
       for (const message of threadMessages) {
         const sender = senders.find((sender) => sender.id === message.senderId);
         const email = emails.find((email) => email.id === message.emailId);
-        const actualSender = formatText(sender?.displayName ?? email!.from.email.value!, 20);
+        const actualSender = formatText(
+          sender?.displayName ?? email!.from.email.value!,
+          20
+        );
+        const senderDomain =
+          sender?.email.getDomain() ?? email!.from.email.getDomain();
         const truncatedBody = formatText(message.body, 100);
         const formattedDate = formatText(message.date.toLocaleDateString(), 10);
 
-        console.log(`   ${formattedDate} ${actualSender}: ${truncatedBody}`);
+        console.log(
+          `   ${formattedDate} ${actualSender} (${senderDomain}): ${truncatedBody}`
+        );
       }
     }
   }
